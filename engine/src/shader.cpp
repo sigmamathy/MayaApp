@@ -41,7 +41,7 @@ static void ReadFile(std::string const& file, std::string& output)
 	std::ifstream ifs(file);
 #if MAYA_DEBUG
 	if (!ifs.is_open()) {
-		std::cout << "Cannot open file \"" + file + "\"";
+		std::cout << "Cannot open file \"" + file + "\"\n";
 		return;
 	}
 #endif
@@ -91,10 +91,11 @@ int Shader::GetUniformLocation(std::string const& name)
 	return location;
 }
 
-void Shader::Draw(VertexArray& vao)
+void Shader::Draw(std::string const& vao)
 {
 	Bind();
-	PrivateControl::Instance().ShaderDrawVAO(vao);
+	auto& ctrl = PrivateControl::Instance();
+	ctrl.ShaderDrawVAO(*ctrl.vaos.at(vao));
 }
 
 #define MAYA_UNIFORM_VECTOR_FUNCTION(ty, sz, fn)\

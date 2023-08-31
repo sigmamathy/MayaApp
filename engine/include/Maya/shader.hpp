@@ -29,7 +29,7 @@ public:
 		SetUniform(name, vec);
 	}
 
-	void Draw(VertexArray& vao);
+	void Draw(std::string const& vao);
 
 private:
 	unsigned int shaderid;

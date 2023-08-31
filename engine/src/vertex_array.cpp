@@ -27,9 +27,15 @@ VertexArray::~VertexArray()
 void VertexArray::Bind()
 {
 	auto& ctrl = PrivateControl::Instance();
-	// if (this == ctrl.current_vao) return;
+	if (this == ctrl.current_vao) return;
 	ctrl.current_vao = this;
 	glBindVertexArray(vaoid);
+}
+
+void VertexArray::Unbind()
+{
+	PrivateControl::Instance().current_vao = nullptr;
+	glBindVertexArray(0);
 }
 
 VertexArray& VertexArray::LinkVBO(float const* data, VertexLayout layout)
@@ -49,17 +55,8 @@ VertexArray& VertexArray::LinkVBO(float const* data, VertexLayout layout)
 	}
 	
 	attribloc += layout.attributes.size();
-	glBindVertexArray(0);
+	Unbind();
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	//glGenBuffers(1, &vboid);
-	//glBindVertexArray(vaoid);
-	//glBindBuffer(GL_ARRAY_BUFFER, vboid);
-	//glBufferData(GL_ARRAY_BUFFER, 9 * sizeof(float), data, GL_STATIC_DRAW);
-	//glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-	//glEnableVertexAttribArray(0);
-	//glBindVertexArray(0);
-	//glBindBuffer(GL_ARRAY_BUFFER, 0);
 	return *this;
 }
 
@@ -70,7 +67,7 @@ VertexArray& VertexArray::LinkIBO(unsigned const* data, std::uint32_t count)
 	glGenBuffers(1, &iboid);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, iboid);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, count * sizeof(unsigned int), data, GL_STATIC_DRAW);
-	glBindVertexArray(0);
+	Unbind();
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	elem_to_draw = count;
 	return *this;

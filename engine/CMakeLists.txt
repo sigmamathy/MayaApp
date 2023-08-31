@@ -5,11 +5,16 @@ project("MayaEngine")
 add_library(
 	${PROJECT_NAME}
 	"thirdparty/glad/glad.c"
+	"thirdparty/stb/stb_image.c"
 	"src/launch.cpp"
 	"src/deviceinfo.cpp"
 	"src/window.cpp"
 	"src/scene.cpp"
- "src/shader.cpp" "src/vertex_array.cpp")
+	"src/shader.cpp"
+	"src/vertex_array.cpp"
+	"src/transformation.cpp"
+	"src/2D/renderer.cpp"
+ "src/texture.cpp")
 
 # Version: C++ 20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
@@ -29,6 +34,7 @@ target_include_directories(
 	PUBLIC "include"
 	PUBLIC "thirdparty/glfw/include"
 	PUBLIC "thirdparty/glad/include"
+	PUBLIC "thirdparty/stb/include"
 )
 
 # Link third party libraries

@@ -61,11 +61,10 @@ private:
 	VertexArray& operator=(VertexArray const&) = delete;
 	~VertexArray();
 	void Bind();
+	void Unbind();
 	friend class PrivateControl;
 };
 
 VertexArray& AssignVAO(std::string const& name, int count, Primitives primitive = Primitives::Triangles);
-
-VertexArray& GetVAO(std::string const& name);
 
 }

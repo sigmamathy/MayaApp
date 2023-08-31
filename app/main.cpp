@@ -1,40 +1,40 @@
 #include <Maya.hpp>
+#include <Maya2D.hpp>
 
-class MyScene : public Maya::Scene
+class MyScene : public Maya::Scene2D
 {
 public:
-	void OnTick(float elapsed)
+	float rotate;
+
+	MyScene()
 	{
-		auto& shader = Maya::GetShader("Maya_2D");
-		auto& vao = Maya::GetVAO("a");
-		shader.Draw(vao);
+		rotate = 0.0f;
 	}
 
-	void OnEvent(Maya::Event const& e)
+	void OnTick(float elapsed)
 	{
-		
+		Maya::Renderer2D r = CreateRenderer();
+		r.SetColor(0x123456);
+
+		rotate += elapsed;
+		r.SetRotation(rotate);
+
+		r.DrawOval(0, 0, 100, 50);
 	}
 };
 
 bool Maya::ConfigureWindow(WindowConfiguration& cfg)
 {
-	// cfg.fullscreen = Maya::PrimaryMonitor;
 	cfg.size = { 1600, 900 };
-	cfg.fps = 60;
+	cfg.fps = Maya::Vsync;
 	return true;
 }
 
 
 bool Maya::InitResources()
 {
-	float vertices[] = {
-		-0.5f, -0.5f, 0.0f, // left  
-		 0.5f, -0.5f, 0.0f, // right 
-		 0.0f,  0.5f, 0.0f  // top   
-	};
-	AssignShader("Maya_2D", "engine/res/Maya_2D.vert.glsl", "engine/res/Maya_2D.frag.glsl");
-	AssignVAO("a", 3).LinkVBO(vertices, VertexLayout(3));
-
+	LoadResources2D();
+	
 	AssignScene<MyScene>("scene");
 	SelectScene("scene");
 	return true;

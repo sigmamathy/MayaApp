@@ -50,7 +50,6 @@ static void CreateWindowEventCallback(GLFWwindow* window)
 	[](GLFWwindow* window, int width, int height) {
 		auto& data = *(WindowData*)glfwGetWindowUserPointer(window);
 		data.size = Ivec2(width, height);
-		glViewport(0, 0, data.size[0], data.size[1]);
 		data.callback(WindowResizedEvent(data.size));
 	});
 
@@ -116,7 +115,7 @@ int PrivateControl::MainFunction()
 		begin = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
-		glClearColor(0, 0, 1, 1);
+		glClearColor(0, 0, 0, 0);
 		
 		if (current_scene)
 			current_scene->OnTick(elapsed);
@@ -132,6 +131,7 @@ PrivateControl::~PrivateControl()
 {
 	for (auto& pair : shaders) delete pair.second;
 	for (auto& pair : vaos) delete pair.second;
+	for (auto& pair : textures) delete pair.second;
 	glfwTerminate();
 }
 

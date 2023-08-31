@@ -33,6 +33,7 @@ public:
 	std::unordered_map<std::string, std::unique_ptr<Scene>> scenes;
 	std::unordered_map<std::string, Shader*> shaders;
 	std::unordered_map<std::string, VertexArray*> vaos;
+	std::unordered_map<std::string, Texture*> textures;
 
 	Scene* current_scene = nullptr;
 	Shader* current_shader = nullptr;
@@ -42,6 +43,7 @@ public:
 	int MainFunction();
 	Shader& AssignShader_Temp(std::string const& name, std::string const& vertex, std::string const& fragment);
 	VertexArray& AssignVAO_Temp(std::string const& name, int count, Primitives primitive);
+	void AssignTexture_Temp(std::string const& name, std::string const& path, int channels);
 	void ShaderDrawVAO(VertexArray& vao);
 };
 
