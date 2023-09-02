@@ -3,6 +3,7 @@
 #include "./vertex_array.hpp"
 #include "./shader.hpp"
 #include "./texture.hpp"
+#include "./font.hpp"
 
 namespace Maya {
 
@@ -14,5 +15,7 @@ VertexArray& GetVertexArray(std::string const& name);
 Shader& GetShader(std::string const& name);
 
 Texture& GetTexture(std::string const& name);
+
+Font& GetFont(std::string const& name);
 
 }

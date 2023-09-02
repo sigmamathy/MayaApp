@@ -14,7 +14,10 @@ add_library(
 	"src/vertex_array.cpp"
 	"src/transformation.cpp"
 	"src/2D/graphics.cpp"
- "src/texture.cpp" "src/resources.cpp")
+	"src/texture.cpp"
+	"src/resources.cpp"
+	"src/font.cpp"
+)
 
 # Version: C++ 20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)
@@ -27,6 +30,7 @@ endif()
 # Add external submodules
 set(GLFW_BUILD_DOCS OFF)
 add_subdirectory("thirdparty/glfw")
+add_subdirectory("thirdparty/freetype")
 
 # Include directories
 target_include_directories(
@@ -35,12 +39,14 @@ target_include_directories(
 	PUBLIC "thirdparty/glfw/include"
 	PUBLIC "thirdparty/glad/include"
 	PUBLIC "thirdparty/stb/include"
+	PUBLIC "thirdparty/freetype/include"
 )
 
 # Link third party libraries
 target_link_libraries(
 	${PROJECT_NAME}
 	glfw
+	freetype
 )
 
 add_custom_target(copy_resources ALL

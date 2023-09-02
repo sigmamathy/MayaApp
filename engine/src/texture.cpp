@@ -15,6 +15,21 @@ static constexpr int texture_format(int channels)
 	}
 }
 
+Texture::Texture(std::uint8_t const* data, Ivec2 size, int channels)
+{
+	this->size = size;
+	glGenTextures(1, &textureid);
+	glBindTexture(GL_TEXTURE_2D, textureid);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, size[0], size[1], 0, texture_format(channels), GL_UNSIGNED_BYTE, data);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+}
+
 Texture::Texture(std::string const& path, int channels)
 {
 	glGenTextures(1, &textureid);

@@ -14,11 +14,11 @@ public:
 };
 
 template<class Ty> requires std::is_base_of_v<Scene, Ty>
-void AssignScene(std::string const& name) {
-	AssignScene_impl(name, std::make_unique<Ty>());
+void CreateScene(std::string const& name) {
+	CreateScene_impl(name, std::make_unique<Ty>());
 }
 
-void AssignScene_impl(std::string const& name, std::unique_ptr<Scene>&& scene);
+void CreateScene_impl(std::string const& name, std::unique_ptr<Scene>&& scene);
 
 void SelectScene(std::string const& name);
 

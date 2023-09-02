@@ -4,13 +4,14 @@
 class MyScene : public Maya::Scene
 {
 public:
+
 	void OnTick(float elapsed)
 	{
 		Maya::Graphics2D g2d;
-
-		// g2d.SetTexture("Maya");
-		g2d.SetColor(0x00FF00);
-		g2d.DrawLine(-100, -100, 50, 100);
+		
+		g2d.SetTexture("Maya");
+		g2d.SetGlowDirection(Maya::Graphics2D::GlowCenter);
+		g2d.DrawRect(0, 0, 300, 300);
 	}
 };
 
@@ -28,7 +29,7 @@ bool Maya::InitResources()
 
 	Assign("Maya", new Texture("engine/res/Maya.jpg"));
 
-	AssignScene<MyScene>("scene");
+	CreateScene<MyScene>("scene");
 	SelectScene("scene");
 	return true;
 }

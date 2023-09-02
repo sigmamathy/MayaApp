@@ -34,6 +34,7 @@ public:
 	std::unordered_map<std::string, Shader*> shaders;
 	std::unordered_map<std::string, VertexArray*> vaos;
 	std::unordered_map<std::string, Texture*> textures;
+	std::unordered_map<std::string, Font*> fonts;
 
 	Scene* current_scene = nullptr;
 	Shader* current_shader = nullptr;

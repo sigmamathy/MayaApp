@@ -98,8 +98,10 @@ int PrivateControl::MainFunction()
 	CreateWindowEventCallback(window);
 	gladLoadGL();
 	glViewport(0, 0, windata.size[0], windata.size[1]);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
-	AssignScene<Scene>("");
+	CreateScene<Scene>("");
 	
 	if (!InitResources())
 		return -1;
@@ -132,6 +134,7 @@ PrivateControl::~PrivateControl()
 	for (auto& pair : shaders) delete pair.second;
 	for (auto& pair : vaos) delete pair.second;
 	for (auto& pair : textures) delete pair.second;
+	for (auto& pair : fonts) delete pair.second;
 	glfwTerminate();
 }
 

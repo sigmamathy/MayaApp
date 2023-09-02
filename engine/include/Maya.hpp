@@ -12,4 +12,5 @@
 #include "./Maya/vertex_array.hpp"
 #include "./Maya/shader.hpp"
 #include "./Maya/texture.hpp"
+#include "./Maya/font.hpp"
 #include "./Maya/resources.hpp"

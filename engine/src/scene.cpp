@@ -2,7 +2,7 @@
 
 namespace Maya {
 
-void AssignScene_impl(std::string const& name, std::unique_ptr<Scene>&& scene)
+void CreateScene_impl(std::string const& name, std::unique_ptr<Scene>&& scene)
 {
 	auto& ctrl = PrivateControl::Instance();
 	ctrl.scenes.emplace(name, std::move(scene));

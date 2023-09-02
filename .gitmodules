@@ -1,3 +1,6 @@
 [submodule "engine/thirdparty/glfw"]
 	path = engine/thirdparty/glfw
 	url = https://github.com/glfw/glfw.git
+[submodule "engine/thirdparty/freetype"]
+	path = engine/thirdparty/freetype
+	url = https://github.com/freetype/freetype.git
