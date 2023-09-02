@@ -46,19 +46,4 @@ void Texture::Bind(int slot)
 	glBindTexture(GL_TEXTURE_2D, textureid);
 }
 
-void PrivateControl::AssignTexture_Temp(std::string const& name, std::string const& path, int channels)
-{
-	textures.emplace(name, new Texture(path, channels));
-}
-
-void AssignTexture(std::string const& name, std::string const& path, int channels)
-{
-	PrivateControl::Instance().AssignTexture_Temp(name, path, channels);
-}
-
-void UseTexture(std::string const& name, int slot)
-{
-	PrivateControl::Instance().textures.at(name)->Bind(slot);
-}
-
 }

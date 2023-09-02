@@ -37,6 +37,8 @@ struct VertexLayout final
 class VertexArray
 {
 public:
+	VertexArray(int count, Primitives primitive = Primitives::Triangles);
+
 	// Link a vertex buffer object to this vao
 	// @param data: the array pointer that points the data,
 	//				the size of array must equal to the indices count in the constructor
@@ -56,7 +58,6 @@ private:
 	Primitives primitives;
 
 private:
-	VertexArray(int count, Primitives primitive);
 	VertexArray(VertexArray const&) = delete;
 	VertexArray& operator=(VertexArray const&) = delete;
 	~VertexArray();
@@ -64,7 +65,5 @@ private:
 	void Unbind();
 	friend class PrivateControl;
 };
-
-VertexArray& AssignVAO(std::string const& name, int count, Primitives primitive = Primitives::Triangles);
 
 }

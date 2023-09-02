@@ -13,8 +13,8 @@ add_library(
 	"src/shader.cpp"
 	"src/vertex_array.cpp"
 	"src/transformation.cpp"
-	"src/2D/renderer.cpp"
- "src/texture.cpp")
+	"src/2D/graphics.cpp"
+ "src/texture.cpp" "src/resources.cpp")
 
 # Version: C++ 20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

@@ -1,3 +1,3 @@
 #pragma once
 
-#include "./Maya/2D/renderer.hpp"
+#include "./Maya/2D/graphics.hpp"

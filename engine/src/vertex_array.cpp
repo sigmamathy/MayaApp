@@ -73,23 +73,6 @@ VertexArray& VertexArray::LinkIBO(unsigned const* data, std::uint32_t count)
 	return *this;
 }
 
-VertexArray& PrivateControl::AssignVAO_Temp(std::string const& name, int count, Primitives primitive)
-{
-	auto* ptr = new VertexArray(count, primitive);
-	vaos.emplace(name, ptr);
-	return *ptr;
-}
-
-VertexArray& AssignVAO(std::string const& name, int count, Primitives primitive)
-{
-	return PrivateControl::Instance().AssignVAO_Temp(name, count, primitive);
-}
-
-VertexArray& GetVAO(std::string const& name)
-{
-	return *PrivateControl::Instance().vaos.at(name);
-}
-
 void PrivateControl::ShaderDrawVAO(VertexArray& vao)
 {
 	vao.Bind();

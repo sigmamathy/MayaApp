@@ -41,9 +41,6 @@ public:
 
 public:
 	int MainFunction();
-	Shader& AssignShader_Temp(std::string const& name, std::string const& vertex, std::string const& fragment);
-	VertexArray& AssignVAO_Temp(std::string const& name, int count, Primitives primitive);
-	void AssignTexture_Temp(std::string const& name, std::string const& path, int channels);
 	void ShaderDrawVAO(VertexArray& vao);
 };
 

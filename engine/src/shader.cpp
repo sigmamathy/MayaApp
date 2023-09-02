@@ -24,49 +24,31 @@ static unsigned create_shader(unsigned type, std::string const& src)
 	return shader;
 }
 
-Shader::Shader(std::string const& vertex, std::string const& fragment)
-{
-	shaderid = glCreateProgram();
-	unsigned int vshader = create_shader(GL_VERTEX_SHADER, vertex);
-	unsigned int fshader = create_shader(GL_FRAGMENT_SHADER, fragment);
-	glAttachShader(shaderid, vshader);
-	glAttachShader(shaderid, fshader);
-	glLinkProgram(shaderid);
-	glDeleteShader(vshader);
-	glDeleteShader(fshader);
-}
-
-static void ReadFile(std::string const& file, std::string& output)
+static std::string ReadFile(std::string const& file)
 {
 	std::ifstream ifs(file);
 #if MAYA_DEBUG
 	if (!ifs.is_open()) {
 		std::cout << "Cannot open file \"" + file + "\"\n";
-		return;
+		return "";
 	}
 #endif
-	std::string line;
+	std::string output, line;
 	while (getline(ifs, line))
 		output += line + '\n';
+	return output;
 }
 
-Shader& PrivateControl::AssignShader_Temp(std::string const& name, std::string const& vertex, std::string const& fragment)
+Shader::Shader(std::string const& vertex, std::string const& fragment, bool is_file_name)
 {
-	auto* ptr = new Shader(vertex, fragment);
-	shaders.emplace(name, ptr);
-	return *ptr;
-}
-
-Shader& AssignShader(std::string const& name, std::string const& vertex_file, std::string const& fragment_file)
-{
-	std::string vsrc, fsrc;
-	ReadFile(vertex_file, vsrc), ReadFile(fragment_file, fsrc);
-	return PrivateControl::Instance().AssignShader_Temp(name, vsrc, fsrc);
-}
-
-Shader& GetShader(std::string const& name)
-{
-	return *PrivateControl::Instance().shaders.at(name);
+	shaderid = glCreateProgram();
+	unsigned int vshader = create_shader(GL_VERTEX_SHADER, is_file_name ? ReadFile(vertex) : vertex);
+	unsigned int fshader = create_shader(GL_FRAGMENT_SHADER, is_file_name ? ReadFile(fragment) : fragment);
+	glAttachShader(shaderid, vshader);
+	glAttachShader(shaderid, fshader);
+	glLinkProgram(shaderid);
+	glDeleteShader(vshader);
+	glDeleteShader(fshader);
 }
 
 Shader::~Shader()

@@ -1,25 +1,16 @@
 #include <Maya.hpp>
 #include <Maya2D.hpp>
 
-class MyScene : public Maya::Scene2D
+class MyScene : public Maya::Scene
 {
 public:
-	float rotate;
-
-	MyScene()
-	{
-		rotate = 0.0f;
-	}
-
 	void OnTick(float elapsed)
 	{
-		Maya::Renderer2D r = CreateRenderer();
-		r.SetColor(0x123456);
+		Maya::Graphics2D g2d;
 
-		rotate += elapsed;
-		r.SetRotation(rotate);
-
-		r.DrawOval(0, 0, 100, 50);
+		// g2d.SetTexture("Maya");
+		g2d.SetColor(0x00FF00);
+		g2d.DrawLine(-100, -100, 50, 100);
 	}
 };
 
@@ -33,8 +24,10 @@ bool Maya::ConfigureWindow(WindowConfiguration& cfg)
 
 bool Maya::InitResources()
 {
-	LoadResources2D();
-	
+	Graphics2D::InitResources();
+
+	Assign("Maya", new Texture("engine/res/Maya.jpg"));
+
 	AssignScene<MyScene>("scene");
 	SelectScene("scene");
 	return true;
