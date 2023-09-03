@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20.0)
 
 # Application name
-project("TrucyApp")
+project("MayaApp")
 
 # Source files
 add_executable(${PROJECT_NAME} "app/main.cpp")

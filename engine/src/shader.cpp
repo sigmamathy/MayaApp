@@ -73,11 +73,18 @@ int Shader::GetUniformLocation(std::string const& name)
 	return location;
 }
 
+void Shader::Draw(VertexArray& vao)
+{
+	Bind();
+	auto& ctrl = PrivateControl::Instance();
+	ctrl.ShaderDrawVAO(vao);
+}
+
 void Shader::Draw(std::string const& vao)
 {
 	Bind();
 	auto& ctrl = PrivateControl::Instance();
-	ctrl.ShaderDrawVAO(*ctrl.vaos.at(vao));
+	ctrl.ShaderDrawVAO(GetVertexArray(vao));
 }
 
 #define MAYA_UNIFORM_VECTOR_FUNCTION(ty, sz, fn)\

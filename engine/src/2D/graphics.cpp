@@ -14,18 +14,18 @@ constexpr static float square_vertices[] = {
 
 void Graphics2D::InitResources()
 {
-	Shader* shader = new Shader("engine/res/Maya_2D.vert.glsl", "engine/res/Maya_2D.frag.glsl");
+	Shader* shader = new Shader("engine/res/2D/shaders/default.vert.glsl", "engine/res/2D/shaders/default.frag.glsl");
 	shader->SetUniform("u_texture", 0);
 	shader->SetUniform("u_glow_texture", 1);
 
 	VertexArray* square_vao = new VertexArray(6);
 	square_vao->LinkVBO(square_vertices, VertexLayout(2, 2));
 
-	Assign("Maya_2D_shader", shader);
-	Assign("Maya_2D_square_vao", square_vao);
-	Assign("Maya_2D_Arial_30", new Font("engine/res/Arial.ttf", 30));
+	Assign("Maya_2D_shader_default", shader);
+	Assign("Maya_2D_vao_square", square_vao);
+	Assign("Maya_2D_font_Arial_30", new Font("engine/res/Arial.ttf", 30));
 
-	auto assign_glow = [](std::string const& name) { Assign("Maya_2D_glow_" + name, new Texture("engine/res/Maya_glow_" + name + ".jpg", 3)); };
+	auto assign_glow = [](std::string const& name) { Assign("Maya_2D_glow_" + name, new Texture("engine/res/2D/glows/" + name + ".jpg", 3)); };
 	assign_glow("horizontal");
 	assign_glow("vertical");
 	assign_glow("diagonal");
@@ -36,7 +36,7 @@ void Graphics2D::InitResources()
 }
 
 Graphics2D::Graphics2D()
-	: shader(GetShader("Maya_2D_shader")), rotation(0), oval_measure(0), line_width(1)
+	: shader(GetShader("Maya_2D_shader_default")), rotation(0), oval_measure(0), line_width(1)
 {
 	SetColor(0xFFFFFF);
 	SetTexture(nullptr);
@@ -132,13 +132,13 @@ void Graphics2D::SetOvalGood(unsigned int measure)
 {
 #if MAYA_DEBUG
 	if (measure < 3) {
-		std::cout << "Attempting to call SetOvalGood with measure < 3\n";
+		std::cout << "Attempting to call Graphics2D::SetOvalGood with measure < 3\n";
 		return;
 	}
 #endif
 	oval_measure = measure;
 	auto& ctrl = PrivateControl::Instance();
-	std::string name = "Maya_2D_oval_" + std::to_string(measure) + "_vao";
+	std::string name = "Maya_2D_vao_circle_" + std::to_string(measure);
 	if (ctrl.vaos.count(name)) return;
 
 	std::vector<float> vertices;
@@ -183,7 +183,7 @@ void Graphics2D::SetFont(std::string const& name)
 
 void Graphics2D::SetFont(Font* font)
 {
-	this->font = font ? font : &GetFont("Maya_2D_Arial_30");
+	this->font = font ? font : &GetFont("Maya_2D_font_Arial_30");
 }
 
 void Graphics2D::SetTextAlignment(TextAlignment align)
@@ -199,7 +199,7 @@ void Graphics2D::DrawRect(float x, float y, float width, float height)
 void Graphics2D::DrawRect(Fvec2 position, Fvec2 scale)
 {
 	shader.SetUniform("u_model", Translate(position) * Rotate(rotation) * Scale(scale));
-	shader.Draw("Maya_2D_square_vao");
+	shader.Draw("Maya_2D_vao_square");
 }
 
 void Graphics2D::DrawOval(float x, float y, float width, float height)
@@ -210,7 +210,7 @@ void Graphics2D::DrawOval(float x, float y, float width, float height)
 void Graphics2D::DrawOval(Fvec2 position, Fvec2 scale)
 {
 	shader.SetUniform("u_model", Translate(position) * Rotate(rotation) * Scale(scale));
-	std::string name = "Maya_2D_oval_" + std::to_string(oval_measure) + "_vao";
+	std::string name = "Maya_2D_vao_circle_" + std::to_string(oval_measure);
 	shader.Draw(name);
 }
 
@@ -227,7 +227,7 @@ void Graphics2D::DrawLine(Fvec2 start, Fvec2 end)
 	Fmat4 scale = Scale(Fvec2(dv.Norm(), line_width));
 	Fmat4 rot = Rotate(std::atan2(dv[1], dv[0]));
 	shader.SetUniform("u_model", pos * rot * scale);
-	shader.Draw("Maya_2D_square_vao");
+	shader.Draw("Maya_2D_vao_square");
 }
 
 void Graphics2D::DrawText(std::string const& str, float x, float y)
@@ -257,7 +257,7 @@ void Graphics2D::DrawText(std::string const& str, float x, float y)
 
 		glyph.texture->Bind(0);
 		shader.SetUniform("u_model", model);
-		shader.Draw("Maya_2D_square_vao");
+		shader.Draw("Maya_2D_vao_square");
 		char_x += glyph.advance >> 6;
 	}
 	shader.SetUniform("u_draw_text", 0);

@@ -4,14 +4,22 @@
 class MyScene : public Maya::Scene
 {
 public:
+	Maya::ValueTracker track = -200;
+
+	MyScene() {
+		track.Transform(200, Maya::EaseOutBounce);
+		track.Transform(-200, Maya::EaseOutBounce);
+	}
 
 	void OnTick(float elapsed)
 	{
 		Maya::Graphics2D g2d;
+		track.Update(elapsed, true);
 		
 		g2d.SetTexture("Maya");
 		g2d.SetGlowDirection(Maya::Graphics2D::GlowCenter);
-		g2d.DrawRect(0, 0, 300, 300);
+
+		g2d.DrawRect(track.Get(), 0, 300, 300);
 	}
 };
 

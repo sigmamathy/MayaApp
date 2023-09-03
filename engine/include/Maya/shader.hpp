@@ -31,6 +31,10 @@ public:
 		SetUniform(name, vec);
 	}
 
+	// Draw a vertex array
+	void Draw(VertexArray& vao);
+
+	// Draw a vertex array
 	void Draw(std::string const& vao);
 
 private:

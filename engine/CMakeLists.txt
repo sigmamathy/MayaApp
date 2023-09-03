@@ -17,6 +17,7 @@ add_library(
 	"src/texture.cpp"
 	"src/resources.cpp"
 	"src/font.cpp"
+	"src/value_tracker.cpp"
 )
 
 # Version: C++ 20
