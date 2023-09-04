@@ -4,22 +4,30 @@
 class MyScene : public Maya::Scene
 {
 public:
-	Maya::ValueTracker track = -200;
+	Maya::Fvec2 position, velocity;
 
 	MyScene() {
-		track.Transform(200, Maya::EaseOutBounce);
-		track.Transform(-200, Maya::EaseOutBounce);
+		position = { 0, 0 };
+		velocity = { 0, 0 };
 	}
 
 	void OnTick(float elapsed)
 	{
 		Maya::Graphics2D g2d;
-		track.Update(elapsed, true);
-		
-		g2d.SetTexture("Maya");
-		g2d.SetGlowDirection(Maya::Graphics2D::GlowCenter);
+		velocity[1] -= elapsed * 981.0f;
+		position += elapsed * velocity;
 
-		g2d.DrawRect(track.Get(), 0, 300, 300);
+		g2d.DrawRect(position, Maya::Fvec2(50));
+	}
+
+	void OnEvent(Maya::Event const& e)
+	{
+		if (auto* ke = Maya::EventCast<Maya::KeyEvent>(e)) {
+			if (ke->down) {
+				if (ke->keycode == Maya::KeyW)
+					velocity[1] = 600.0f;
+			}
+		}
 	}
 };
 

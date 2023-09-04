@@ -4,3 +4,9 @@
 [submodule "engine/thirdparty/freetype"]
 	path = engine/thirdparty/freetype
 	url = https://github.com/freetype/freetype.git
+[submodule "engine/thirdparty/portaudio"]
+	path = engine/thirdparty/portaudio
+	url = https://github.com/PortAudio/portaudio.git
+[submodule "engine/thirdparty/sndfile"]
+	path = engine/thirdparty/sndfile
+	url = https://github.com/libsndfile/libsndfile.git

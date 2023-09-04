@@ -32,6 +32,8 @@ endif()
 set(GLFW_BUILD_DOCS OFF)
 add_subdirectory("thirdparty/glfw")
 add_subdirectory("thirdparty/freetype")
+add_subdirectory("thirdparty/portaudio")
+add_subdirectory("thirdparty/sndfile")
 
 # Include directories
 target_include_directories(
@@ -41,6 +43,8 @@ target_include_directories(
 	PUBLIC "thirdparty/glad/include"
 	PUBLIC "thirdparty/stb/include"
 	PUBLIC "thirdparty/freetype/include"
+	PUBLIC "thirdparty/portaudio/include"
+	PUBLIC "thirdparty/sndfile/include"
 )
 
 # Link third party libraries
@@ -48,6 +52,8 @@ target_link_libraries(
 	${PROJECT_NAME}
 	glfw
 	freetype
+	PortAudio
+	sndfile
 )
 
 add_custom_target(copy_resources ALL
