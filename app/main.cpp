@@ -11,6 +11,10 @@ public:
 		velocity = { 0, 0 };
 	}
 
+	void OnBegin()
+	{
+	}
+
 	void OnTick(float elapsed)
 	{
 		Maya::Graphics2D g2d;
@@ -26,6 +30,12 @@ public:
 			if (ke->down) {
 				if (ke->keycode == Maya::KeyW)
 					velocity[1] = 600.0f;
+				if (ke->keycode == Maya::KeySpace)
+					Maya::GetAudioStream("Pursuit").Play();
+			}
+			else {
+				if (ke->keycode == Maya::KeySpace)
+					Maya::GetAudioStream("Pursuit").Stop();
 			}
 		}
 	}
@@ -44,6 +54,7 @@ bool Maya::InitResources()
 	Graphics2D::InitResources();
 
 	Assign("Maya", new Texture("engine/res/Maya.jpg"));
+	Assign("Pursuit", new AudioStream("engine/res/Pursuit 2001.wav"));
 
 	CreateScene<MyScene>("scene");
 	SelectScene("scene");

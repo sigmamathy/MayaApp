@@ -70,6 +70,8 @@ int PrivateControl::MainFunction()
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+	Pa_Initialize();
+
 	int count;
 	GLFWmonitor** ms = glfwGetMonitors(&count);
 	monitors.reserve(count);
@@ -135,6 +137,9 @@ PrivateControl::~PrivateControl()
 	for (auto& pair : vaos) delete pair.second;
 	for (auto& pair : textures) delete pair.second;
 	for (auto& pair : fonts) delete pair.second;
+	for (auto& pair : audio_streams) delete pair.second;
+
+	Pa_Terminate();
 	glfwTerminate();
 }
 

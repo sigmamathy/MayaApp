@@ -11,5 +11,6 @@ MAYA_RESOURCES_FUNCTION(VertexArray, vaos, GetVertexArray)
 MAYA_RESOURCES_FUNCTION(Shader, shaders, GetShader)
 MAYA_RESOURCES_FUNCTION(Texture, textures, GetTexture)
 MAYA_RESOURCES_FUNCTION(Font, fonts, GetFont)
+MAYA_RESOURCES_FUNCTION(AudioStream, audio_streams, GetAudioStream)
 
 }

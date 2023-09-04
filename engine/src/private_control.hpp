@@ -3,6 +3,7 @@
 #include <Maya.hpp>
 #include <glad/glad.h>
 #include <glfw/glfw3.h>
+#include <portaudio.h>
 
 namespace Maya {
 
@@ -35,6 +36,7 @@ public:
 	std::unordered_map<std::string, VertexArray*> vaos;
 	std::unordered_map<std::string, Texture*> textures;
 	std::unordered_map<std::string, Font*> fonts;
+	std::unordered_map<std::string, AudioStream*> audio_streams;
 
 	Scene* current_scene = nullptr;
 	Shader* current_shader = nullptr;
