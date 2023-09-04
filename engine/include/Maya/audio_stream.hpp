@@ -12,6 +12,8 @@ public:
 	void Play(bool repeat = false);
 	void Stop();
 
+	void SetVolume(float volume);
+
 private:
 	void* stream;
 	void* audio_play_info;

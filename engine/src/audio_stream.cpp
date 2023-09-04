@@ -9,6 +9,7 @@ struct AudioPlayInfo
     int channels;
     unsigned int total_samples;
     unsigned int current_position;
+    float volume;
     bool replay;
 };
 
@@ -26,7 +27,7 @@ static int PortAudio_audioCallback(const void* input_buffer, void* output_buffer
         // More samples available, copy them to the output buffer
         for (unsigned long i = 0; i < frames_per_buffer; i++) {
             for (int channel = 0; channel < audio_play_info->channels; channel++) {
-                *(out++) = audio_play_info->data[audio_play_info->current_position++];
+                *(out++) = audio_play_info->data[audio_play_info->current_position++] * audio_play_info->volume;
             }
         }
     }
@@ -68,6 +69,7 @@ AudioStream::AudioStream(std::string const& filepath, unsigned int frame_per_buf
     api->channels = fileInfo.channels;
     api->total_samples = api->data.size();
     api->current_position = 0;
+    api->volume = 1.0f;
     audio_play_info = api;
 
     // Set up the audio stream parameters
@@ -102,6 +104,12 @@ void AudioStream::Play(bool repeat)
 void AudioStream::Stop()
 {
     Pa_StopStream((PaStream*)stream);
+}
+
+void AudioStream::SetVolume(float volume)
+{
+    auto* api = (AudioPlayInfo*)audio_play_info;
+    api->volume = volume;
 }
 
 }
