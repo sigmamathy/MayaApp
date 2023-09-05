@@ -4,19 +4,38 @@
 
 namespace Maya {
 
+struct AudioStreamStatus
+{
+	float const* samples;
+	unsigned int total_frames;
+	unsigned int frames_per_buffer;
+	int sample_rate;
+	int channels;
+	float duration;
+
+	bool is_playing;
+	unsigned int current_sample_position;
+	bool replay_at_end;
+	float time;
+
+	float volume;
+};
+
 class AudioStream
 {
 public:
 	AudioStream(std::string const& filepath, unsigned int frame_per_buffer = 256);
 
-	void Play(bool repeat = false);
+	void Start(bool repeat = false);
 	void Stop();
 
 	void SetVolume(float volume);
+	AudioStreamStatus const& GetAudioStreamStatus() const;
 
 private:
 	void* stream;
-	void* audio_play_info;
+	std::vector<float> samples;
+	AudioStreamStatus status;
 
 private:
 	~AudioStream();

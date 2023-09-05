@@ -21,7 +21,11 @@ public:
 		velocity[1] -= elapsed * 981.0f;
 		position += elapsed * velocity;
 
-		g2d.DrawRect(position, Maya::Fvec2(50));
+		//g2d.DrawRect(position, Maya::Fvec2(50));
+
+		g2d.SetTextAlignment(Maya::Graphics2D::AlignCenter);
+		float t = Maya::GetAudioStream("Pursuit").GetAudioStreamStatus().time;
+		g2d.DrawText("Pursuit: " + std::to_string(t), 0, 0);
 	}
 
 	void OnEvent(Maya::Event const& e)
@@ -31,11 +35,7 @@ public:
 				if (ke->keycode == Maya::KeyW)
 					velocity[1] = 600.0f;
 				if (ke->keycode == Maya::KeySpace)
-					Maya::GetAudioStream("Pursuit").Play();
-			}
-			else {
-				if (ke->keycode == Maya::KeySpace)
-					Maya::GetAudioStream("Pursuit").Stop();
+					Maya::GetAudioStream("Pursuit").Start();
 			}
 		}
 	}
@@ -54,6 +54,7 @@ bool Maya::InitResources()
 	Graphics2D::InitResources();
 
 	Assign("Maya", new Texture("engine/res/Maya.jpg"));
+
 	Assign("Pursuit", new AudioStream("engine/res/Pursuit 2001.wav"));
 
 	CreateScene<MyScene>("scene");
