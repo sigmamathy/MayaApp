@@ -9,6 +9,7 @@ constexpr int UnlimitedFPS = -1;
 
 struct WindowConfiguration
 {
+	WindowConfiguration();
 	Ivec2 size;
 	std::string title;
 	int fullscreen;
@@ -19,15 +20,11 @@ struct WindowConfiguration
 		 auto_iconify,
 		 always_on_top,
 		 maximized;
-private:
-	WindowConfiguration();
-	friend class PrivateControl;
 };
 
+void CreateWindowInstance(WindowConfiguration& cfg);
+
+bool InitializeApplication();
 void CloseApplication();
-
-bool ConfigureWindow(WindowConfiguration& cfg);
-
-bool InitResources();
 
 }

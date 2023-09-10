@@ -34,21 +34,14 @@ struct VertexLayout final
 	int stride = 0;
 };
 
+using VertexDataStruct = std::vector<std::pair<float*, VertexLayout>>;
+
 class VertexArray
 {
 public:
-	VertexArray(int count, Primitives primitive = Primitives::Triangles);
-
-	// Link a vertex buffer object to this vao
-	// @param data: the array pointer that points the data,
-	//				the size of array must equal to the indices count in the constructor
-	// @param layout: specify the layout for the specific buffer
-	VertexArray& LinkVBO(float const* data, VertexLayout layout);
-
-	// Link a index buffer object to this vao
-	// @param data: the array pointer that points to the indices data
-	// @param count: the size of that array
-	VertexArray& LinkIBO(unsigned const* data, std::uint32_t count);
+	void Bind();
+	void Unbind();
+	void Draw();
 
 private:
 	unsigned int vaoid, iboid;
@@ -58,12 +51,9 @@ private:
 	Primitives primitives;
 
 private:
-	VertexArray(VertexArray const&) = delete;
-	VertexArray& operator=(VertexArray const&) = delete;
-	~VertexArray();
-	void Bind();
-	void Unbind();
-	friend class PrivateControl;
+	VertexArray(VertexDataStruct& vds, int count, Primitives primitive = Primitives::Triangles);
+	VertexArray(VertexDataStruct& vds, int count, Primitives primitive, unsigned int* ibo, unsigned int ibosize);
+	friend class ResourcesManager;
 };
 
 }

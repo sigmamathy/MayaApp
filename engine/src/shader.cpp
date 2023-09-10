@@ -39,9 +39,21 @@ static std::string ReadFile(std::string const& file)
 	return output;
 }
 
+static struct Shader_OpenGLResourceReleaser {
+	std::vector<unsigned int> shaderids;
+	~Shader_OpenGLResourceReleaser() {
+		for (auto id : shaderids)
+			glDeleteProgram(id);
+	}
+} releaser;
+
+static Shader* current_shader = nullptr;
+
 Shader::Shader(std::string const& vertex, std::string const& fragment, bool is_file_name)
 {
 	shaderid = glCreateProgram();
+	releaser.shaderids.push_back(shaderid);
+
 	unsigned int vshader = create_shader(GL_VERTEX_SHADER, is_file_name ? ReadFile(vertex) : vertex);
 	unsigned int fshader = create_shader(GL_FRAGMENT_SHADER, is_file_name ? ReadFile(fragment) : fragment);
 	glAttachShader(shaderid, vshader);
@@ -51,16 +63,10 @@ Shader::Shader(std::string const& vertex, std::string const& fragment, bool is_f
 	glDeleteShader(fshader);
 }
 
-Shader::~Shader()
-{
-	glDeleteProgram(shaderid);
-}
-
 void Shader::Bind()
 {
-	auto& ctrl = PrivateControl::Instance();
-	if (this == ctrl.current_shader) return;
-	ctrl.current_shader = this;
+	if (this == current_shader) return;
+	current_shader = this;
 	glUseProgram(shaderid);
 }
 
@@ -71,20 +77,6 @@ int Shader::GetUniformLocation(std::string const& name)
 	int location = glGetUniformLocation(shaderid, name.c_str());
 	uniform_location_cache[name] = location;
 	return location;
-}
-
-void Shader::Draw(VertexArray& vao)
-{
-	Bind();
-	auto& ctrl = PrivateControl::Instance();
-	ctrl.ShaderDrawVAO(vao);
-}
-
-void Shader::Draw(std::string const& vao)
-{
-	Bind();
-	auto& ctrl = PrivateControl::Instance();
-	ctrl.ShaderDrawVAO(GetVertexArray(vao));
 }
 
 #define MAYA_UNIFORM_VECTOR_FUNCTION(ty, sz, fn)\

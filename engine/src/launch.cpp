@@ -61,6 +61,36 @@ static void CreateWindowEventCallback(GLFWwindow* window)
 	});
 }
 
+void CreateWindowInstance(WindowConfiguration& cfg)
+{
+	auto& ctrl = PrivateControl::Instance();
+
+	glfwWindowHint(GLFW_RESIZABLE,		cfg.resizable);
+	glfwWindowHint(GLFW_DECORATED,		cfg.decorated);
+	glfwWindowHint(GLFW_AUTO_ICONIFY,	cfg.auto_iconify);
+	glfwWindowHint(GLFW_FLOATING,		cfg.always_on_top);
+	glfwWindowHint(GLFW_MAXIMIZED,		cfg.maximized);
+	glfwWindowHint(GLFW_SAMPLES,		cfg.msaa);
+
+	GLFWmonitor* monitor = cfg.fullscreen > 0 ? ctrl.monitors[cfg.fullscreen - 1] : nullptr;
+	ctrl.windata.size = cfg.fullscreen > 0 ? GetMonitorInfo(cfg.fullscreen).resolution : cfg.size;
+	ctrl.windata.title = cfg.title;
+	ctrl.windata.callback = [](auto&) {};
+	ctrl.windata.fps = cfg.fps;
+
+	ctrl.window = glfwCreateWindow(ctrl.windata.size[0], ctrl.windata.size[1], cfg.title.c_str(), monitor, 0);
+	glfwMakeContextCurrent(ctrl.window);
+	glfwGetWindowPos(ctrl.window, &ctrl.windata.position[0], &ctrl.windata.position[1]);
+	glfwSetWindowUserPointer(ctrl.window, &ctrl.windata);
+	if (cfg.fps == Vsync) glfwSwapInterval(1);
+	CreateWindowEventCallback(ctrl.window);
+	gladLoadGL();
+	glViewport(0, 0, ctrl.windata.size[0], ctrl.windata.size[1]);
+	glEnable(GL_BLEND);
+	glEnable(GL_MULTISAMPLE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
 int PrivateControl::MainFunction()
 {
 	if (!glfwInit())
@@ -78,46 +108,15 @@ int PrivateControl::MainFunction()
 	for (int i = 0; i < count; i++)
 		monitors.push_back(ms[i]);
 
-	WindowConfiguration config;
-	if (!ConfigureWindow(config))
+	if (!InitializeApplication() || !window)
 		return -1;
 
-	glfwWindowHint(GLFW_RESIZABLE,		config.resizable);
-	glfwWindowHint(GLFW_DECORATED,		config.decorated);
-	glfwWindowHint(GLFW_AUTO_ICONIFY,	config.auto_iconify);
-	glfwWindowHint(GLFW_FLOATING,		config.always_on_top);
-	glfwWindowHint(GLFW_MAXIMIZED,		config.maximized);
-	glfwWindowHint(GLFW_SAMPLES,		config.msaa);
-
-	GLFWmonitor* monitor = config.fullscreen > 0 ? monitors[config.fullscreen - 1] : nullptr;
-	windata.size = config.fullscreen > 0 ? GetMonitorInfo(config.fullscreen).resolution : config.size;
-	windata.title = config.title;
-	windata.callback = [](auto&) {};
-	
-	window = glfwCreateWindow(windata.size[0], windata.size[1], config.title.c_str(), monitor, 0);
-	glfwMakeContextCurrent(window);
-	glfwGetWindowPos(window, &windata.position[0], &windata.position[1]);
-	glfwSetWindowUserPointer(window, &windata);
-	CreateWindowEventCallback(window);
-	gladLoadGL();
-	glViewport(0, 0, windata.size[0], windata.size[1]);
-	glEnable(GL_BLEND);
-	glEnable(GL_MULTISAMPLE);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	CreateScene<Scene>("");
-	
-	if (!InitResources())
-		return -1;
-
-	if (config.fps == Vsync)
-		glfwSwapInterval(1);
 	float begin = glfwGetTime();
 
 	while (!glfwWindowShouldClose(window))
 	{
 		float elapsed = glfwGetTime() - begin;
-		if (config.fps > 0 && elapsed < 1.0f / config.fps) continue;
+		if (windata.fps > 0 && elapsed < 1.0f / windata.fps) continue;
 		begin = glfwGetTime();
 
 		glClear(GL_COLOR_BUFFER_BIT);
@@ -135,12 +134,6 @@ int PrivateControl::MainFunction()
 
 PrivateControl::~PrivateControl()
 {
-	for (auto& pair : shaders) delete pair.second;
-	for (auto& pair : vaos) delete pair.second;
-	for (auto& pair : textures) delete pair.second;
-	for (auto& pair : fonts) delete pair.second;
-	for (auto& pair : audio_streams) delete pair.second;
-
 	Pa_Terminate();
 	glfwTerminate();
 }

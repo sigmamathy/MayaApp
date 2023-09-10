@@ -8,17 +8,45 @@
 
 namespace Maya {
 
-template<class ResourcesPtrTy>
-void Assign(std::string const& name, ResourcesPtrTy ptr);
+class ResourcesManager
+{
+public:
+	static ResourcesManager& Instance();
 
-VertexArray& GetVertexArray(std::string const& name);
+#define MAYA_RESOURCES_MANAGER_CREATE_FUNC(_ty, _list)\
+	template<class... Tys> void Create##_ty(std::string const& name, Tys const&... args) {\
+	_list[name] = _ty(args...); }
 
-Shader& GetShader(std::string const& name);
+	MAYA_RESOURCES_MANAGER_CREATE_FUNC(VertexArray, vaos)
+	MAYA_RESOURCES_MANAGER_CREATE_FUNC(Shader, shaders)
+	MAYA_RESOURCES_MANAGER_CREATE_FUNC(Texture, textures)
+	MAYA_RESOURCES_MANAGER_CREATE_FUNC(Font, fonts)
+	MAYA_RESOURCES_MANAGER_CREATE_FUNC(AudioStream, audio_streams)
 
-Texture& GetTexture(std::string const& name);
+#undef MAYA_RESOURCES_MANAGER_CREATE_FUNC
 
-Font& GetFont(std::string const& name);
+#define MAYA_RESOURCES_MANAGER_GET_FUNC(_ty, _list)\
+	_ty& Get##_ty(std::string const& name) { return _list.at(name); }
 
-AudioStream& GetAudioStream(std::string const& name);
+	MAYA_RESOURCES_MANAGER_GET_FUNC(VertexArray, vaos)
+	MAYA_RESOURCES_MANAGER_GET_FUNC(Shader, shaders)
+	MAYA_RESOURCES_MANAGER_GET_FUNC(Texture, textures)
+	MAYA_RESOURCES_MANAGER_GET_FUNC(Font, fonts)
+	MAYA_RESOURCES_MANAGER_GET_FUNC(AudioStream, audio_streams)
+
+#undef MAYA_RESOURCES_MANAGER_GET_FUNC
+
+private:
+	std::unordered_map<std::string, VertexArray> vaos;
+	std::unordered_map<std::string, Shader> shaders;
+	std::unordered_map<std::string, Texture> textures;
+	std::unordered_map<std::string, Font> fonts;
+	std::unordered_map<std::string, AudioStream> audio_streams;
+
+private:
+	ResourcesManager();
+	ResourcesManager(ResourcesManager const&) = delete;
+	ResourcesManager& operator=(ResourcesManager const&) = delete;
+};
 
 }

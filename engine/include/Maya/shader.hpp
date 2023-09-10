@@ -7,8 +7,6 @@ namespace Maya {
 class Shader
 {
 public:
-	Shader(std::string const& vertex, std::string const& fragment, bool is_file_name = true);
-
 	// Set a uniform vector
 	// @param name: the name of the uniform
 	// @param vec: Type could be int, unsigned int or float, size could be 1 to 4
@@ -31,24 +29,17 @@ public:
 		SetUniform(name, vec);
 	}
 
-	// Draw a vertex array
-	void Draw(VertexArray& vao);
-
-	// Draw a vertex array
-	void Draw(std::string const& vao);
+	// Bind shader
+	void Bind();
 
 private:
 	unsigned int shaderid;
 	std::unordered_map<std::string, int> uniform_location_cache;
 
 private:
-	Shader(Shader const&) = delete;
-	Shader& operator=(Shader const&) = delete;
-	~Shader();
-	void Bind();
+	Shader(std::string const& vertex, std::string const& fragment, bool is_file_name = true);
 	int GetUniformLocation(std::string const& name);
-	friend class PrivateControl;
-
+	friend class ResourcesManager;
 };
 
 }
