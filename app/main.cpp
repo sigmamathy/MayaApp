@@ -1,43 +1,32 @@
 #include <Maya.hpp>
 #include <Maya2D.hpp>
+#include <Maya3D.hpp>
 
 class MyScene : public Maya::Scene
 {
 public:
-	Maya::Fvec2 position, velocity;
+
+	float x = 0.0f;
 
 	MyScene() {
-		position = { 0, 0 };
-		velocity = { 0, 0 };
-	}
-
-	void OnBegin()
-	{
 	}
 
 	void OnTick(float elapsed)
 	{
+		x += elapsed;
 		Maya::Graphics2D g2d;
-		velocity[1] -= elapsed * 981.0f;
-		position += elapsed * velocity;
+		g2d.SetRotation(x);
+		g2d.SetGlowDirection(Maya::Graphics2D::GlowVertical);
+		g2d.SetTexture("Maya");
+		g2d.DrawOval(0, 0, 200, 200);
 
-		//g2d.DrawRect(position, Maya::Fvec2(50));
-
-		g2d.SetTextAlignment(Maya::Graphics2D::AlignCenter);
-		float t = Maya::GetAudioStream("Pursuit").GetAudioStreamStatus().time;
-		g2d.DrawText("Pursuit: " + std::to_string(t), 0, 0);
+		//Maya::Graphics3D g3d;
+		//g3d.DrawCube(elapsed);
 	}
 
 	void OnEvent(Maya::Event const& e)
 	{
-		if (auto* ke = Maya::EventCast<Maya::KeyEvent>(e)) {
-			if (ke->down) {
-				if (ke->keycode == Maya::KeyW)
-					velocity[1] = 600.0f;
-				if (ke->keycode == Maya::KeySpace)
-					Maya::GetAudioStream("Pursuit").Start();
-			}
-		}
+		
 	}
 };
 
@@ -45,6 +34,7 @@ bool Maya::ConfigureWindow(WindowConfiguration& cfg)
 {
 	cfg.size = { 1600, 900 };
 	cfg.fps = Maya::Vsync;
+	cfg.msaa = 4;
 	return true;
 }
 
@@ -52,6 +42,7 @@ bool Maya::ConfigureWindow(WindowConfiguration& cfg)
 bool Maya::InitResources()
 {
 	Graphics2D::InitResources();
+	Graphics3D::InitResources();
 
 	Assign("Maya", new Texture("engine/res/Maya.jpg"));
 

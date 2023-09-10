@@ -91,7 +91,7 @@ Fmat4 PerspectiveProjection(float fovy, float aspect, float near, float far)
 {
 	Fmat4 res(0.0f);
 	float const tanHalfFovy = tan(fovy / 2.0f);
-	res.Get(0, 0) = 1.0f / (aspect * tanHalfFovy);
+	res.Get(0, 0) = 1.0f / (-aspect * tanHalfFovy);
 	res.Get(1, 1) = 1.0f / (tanHalfFovy);
 	res.Get(2, 2) = -(far + near) / (far - near);
 	res.Get(3, 2) = -1.0f;

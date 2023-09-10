@@ -13,6 +13,7 @@ struct WindowConfiguration
 	std::string title;
 	int fullscreen;
 	int fps;
+	int msaa;
 	bool resizable,
 		 decorated,
 		 auto_iconify,

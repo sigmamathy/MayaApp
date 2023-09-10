@@ -18,7 +18,8 @@ add_library(
 	"src/resources.cpp"
 	"src/font.cpp"
 	"src/value_tracker.cpp"
- "src/audio_stream.cpp")
+	"src/audio_stream.cpp"
+ "src/3D/graphics.cpp")
 
 # Version: C++ 20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

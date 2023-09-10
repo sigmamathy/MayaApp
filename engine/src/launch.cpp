@@ -87,6 +87,7 @@ int PrivateControl::MainFunction()
 	glfwWindowHint(GLFW_AUTO_ICONIFY,	config.auto_iconify);
 	glfwWindowHint(GLFW_FLOATING,		config.always_on_top);
 	glfwWindowHint(GLFW_MAXIMIZED,		config.maximized);
+	glfwWindowHint(GLFW_SAMPLES,		config.msaa);
 
 	GLFWmonitor* monitor = config.fullscreen > 0 ? monitors[config.fullscreen - 1] : nullptr;
 	windata.size = config.fullscreen > 0 ? GetMonitorInfo(config.fullscreen).resolution : config.size;
@@ -101,6 +102,7 @@ int PrivateControl::MainFunction()
 	gladLoadGL();
 	glViewport(0, 0, windata.size[0], windata.size[1]);
 	glEnable(GL_BLEND);
+	glEnable(GL_MULTISAMPLE);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	
 	CreateScene<Scene>("");
@@ -144,7 +146,7 @@ PrivateControl::~PrivateControl()
 }
 
 WindowConfiguration::WindowConfiguration()
-	: size(1280, 720), title("Maya Application"), fullscreen(0), fps(UnlimitedFPS),
+	: size(1280, 720), title("Maya Application"), fullscreen(0), fps(UnlimitedFPS), msaa(1),
 	  resizable(true), decorated(true), auto_iconify(true), always_on_top(false), maximized(false)
 {
 }
