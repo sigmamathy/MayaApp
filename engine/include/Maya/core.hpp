@@ -22,6 +22,14 @@
 #error C++20 is the minimum version requried, try compile with /std:c++20 or -std=c++20
 #endif
 
+#define MAYA_LOG(...) std::cout << "\033[0m[\033[91mMayaEngine\033[0m] " << __VA_ARGS__ << '\n';
+
+// Indicate this identifiers should be implemented by the client
+#define MAYA_CLIENT_IMPLEMENTATION
+
+// Indicate this function or functions inside this class is thread-safe and can be called concurrently
+#define MAYA_THREAD_SAFE
+
 #include <string>
 #include <string_view>
 #include <cmath>

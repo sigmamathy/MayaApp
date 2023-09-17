@@ -1,56 +1,22 @@
 #include <Maya.hpp>
-#include <Maya2D.hpp>
-#include <Maya3D.hpp>
 
 class MyScene : public Maya::Scene
 {
 public:
-
-	float x = 0.0f;
-
-	MyScene() {
+	void WhenUpdated(float elapsed) {
+		std::cout << "updated\n";
 	}
-
-	void OnTick(float elapsed)
-	{
-		//x += elapsed;
-		//Maya::Graphics2D g2d;
-		//g2d.SetRotation(x);
-		//g2d.SetGlowDirection(Maya::Graphics2D::GlowVertical);
-		//g2d.SetTexture("Maya");
-		//g2d.DrawOval(0, 0, 200, 200);
-
-		//Maya::Graphics3D g3d;
-		//g3d.DrawCube(elapsed);
-	}
-
-	void OnEvent(Maya::Event const& e)
-	{
-		
+	void DrawGraphics() {
+		std::cout << "graphics\n";
 	}
 };
 
-bool Maya::InitializeApplication()
+void Maya::AppEntryPoint()
 {
-	WindowConfiguration cfg;
-	cfg.size	= { 1600, 900 };
-	cfg.fps		= Vsync;
-	cfg.msaa	= 4;
-	CreateWindowInstance(cfg);
+	WindowParameters param;
+	// param.fps = 500;
+	GameWindow::CreateInstance(param);
 
-	ResourcesManager& rm = ResourcesManager::Instance();
-	
-
-	// Graphics2D::Init(rm);
-
-	//Graphics2D::InitResources();
-	//Graphics3D::InitResources();
-	//
-	//Assign("Maya", new Texture("engine/res/Maya.jpg"));
-	//
-	//Assign("Pursuit", new AudioStream("engine/res/Pursuit 2001.wav"));
-
-	CreateScene<MyScene>("scene");
-	SelectScene("scene");
-	return true;
+	Scene::GetScenes()["my scene"] = new MyScene;
+	Scene::BeginScene("my scene");
 }

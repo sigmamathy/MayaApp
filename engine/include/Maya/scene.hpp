@@ -1,25 +1,30 @@
 #pragma once
 
-#include "./math.hpp"
+#include "./core.hpp"
+#include "./event.hpp"
 
 namespace Maya {
 
 class Scene
 {
 public:
-	virtual void OnBegin() {}
-	virtual void OnClose() {}
-	virtual void OnTick(float elapsed) {}
-	virtual void OnEvent(Event const& e) {}
+	static std::unordered_map<std::string, Scene*>& GetScenes();
+	static std::vector<Scene*> const& GetSelectedScenes();
+	static void BeginScene(std::string const& name);
+	static void EndScene(std::string const& name);
+	static bool IsSceneSelected(std::string const& name);
+
+public:
+	virtual ~Scene() = default;
+	virtual void WhenBegin() {}
+	virtual void WhenEnd() {}
+	virtual void WhenUpdated(float elapsed) {}
+	virtual void DrawGraphics() {}
+	virtual void WhenEventHappened(Event const& e) {}
+
+private:
+	static std::unordered_map<std::string, Scene*> scenes;
+	static std::vector<Scene*> selected_scenes;
 };
-
-template<class Ty> requires std::is_base_of_v<Scene, Ty>
-void CreateScene(std::string const& name) {
-	CreateScene_impl(name, std::make_unique<Ty>());
-}
-
-void CreateScene_impl(std::string const& name, std::unique_ptr<Scene>&& scene);
-
-void SelectScene(std::string const& name);
 
 }

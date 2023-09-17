@@ -9,17 +9,9 @@ add_library(
 	"src/launch.cpp"
 	"src/deviceinfo.cpp"
 	"src/window.cpp"
-	"src/scene.cpp"
-	"src/shader.cpp"
-	"src/vertex_array.cpp"
 	"src/transformation.cpp"
-	"src/2D/graphics.cpp"
-	"src/texture.cpp"
-	"src/resources.cpp"
-	"src/font.cpp"
 	"src/value_tracker.cpp"
-	"src/audio_stream.cpp"
- "src/3D/graphics.cpp")
+ "src/scene.cpp")
 
 # Version: C++ 20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

@@ -10,6 +10,7 @@ struct MonitorInfo
 {
 	Ivec2 resolution;
 	std::string name;
+	void* glfw_monitor;
 };
 
 int GetMonitorsCount();
