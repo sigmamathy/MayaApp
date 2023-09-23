@@ -155,16 +155,33 @@ struct Event
 {
 	// Returns the type of this event
 	virtual std::uint8_t EventType() const = 0;
-};
 
-// Cast Event object to a derived event type, returns nullptr if failed.
-template<class Ty> requires (std::is_same_v<decltype(Ty::StaticType), const std::uint8_t>)
-Ty const* EventCast(Event const& e)
-{
-	if (e.EventType() == Ty::StaticType)
-		return (Ty const*)&e;
-	return nullptr;
-}
+	// Cast Event object to a derived event type, returns nullptr if failed.
+	template<class Ty>
+	Ty const* Cast() const requires (std::is_same_v<decltype(Ty::StaticType), const std::uint8_t>)  {
+		return EventType() == Ty::StaticType ? (Ty const*) this : nullptr;
+	}
+
+	// Cast Event object to a derived event type and stored in ptr, returns false if failed.
+	template<class Ty>
+	bool Cast(Ty const* &ptr) const requires (std::is_same_v<decltype(Ty::StaticType), const std::uint8_t>) {
+		if (EventType() == Ty::StaticType) {
+			ptr = (Ty const*) this;
+			return true;
+		}
+		return false;
+	}
+
+	// Cast Event object to a derived event type and redirect it into func, returns false if failed.
+	template<class Ty>
+	bool Redirect(std::function<void(Ty const&)> const& func) const requires (std::is_same_v<decltype(Ty::StaticType), const std::uint8_t>) {
+		if (EventType() == Ty::StaticType) {
+			func(*(Ty const*)this);
+			return true;
+		}
+		return false;
+	}
+};
 
 // A lazy shortcut that defines the event type and override the function
 #define MAYA_EVENT_TYPE(val) static constexpr std::uint8_t StaticType = val;\

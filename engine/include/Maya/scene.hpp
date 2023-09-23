@@ -19,7 +19,6 @@ public:
 	virtual void WhenBegin() {}
 	virtual void WhenEnd() {}
 	virtual void WhenUpdated(float elapsed) {}
-	virtual void DrawGraphics() {}
 	virtual void WhenEventHappened(Event const& e) {}
 
 private:

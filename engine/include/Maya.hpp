@@ -9,3 +9,8 @@
 #include "./Maya/window.hpp"
 #include "./Maya/scene.hpp"
 #include "./Maya/launch.hpp"
+
+#include "./Maya/vertex_array.hpp"
+#include "./Maya/shader.hpp"
+#include "./Maya/texture.hpp"
+#include "./Maya/font.hpp"

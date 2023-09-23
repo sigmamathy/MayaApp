@@ -24,11 +24,8 @@
 
 #define MAYA_LOG(...) std::cout << "\033[0m[\033[91mMayaEngine\033[0m] " << __VA_ARGS__ << '\n';
 
-// Indicate this identifiers should be implemented by the client
-#define MAYA_CLIENT_IMPLEMENTATION
-
-// Indicate this function or functions inside this class is thread-safe and can be called concurrently
-#define MAYA_THREAD_SAFE
+// Remove the capabilities of copy construct and reassignment
+#define MAYA_NO_COPY_CONSTRUCT(_class) _class(_class const&) = delete; _class& operator=(_class const&) = delete
 
 #include <string>
 #include <string_view>

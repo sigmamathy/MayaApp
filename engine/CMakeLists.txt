@@ -11,7 +11,8 @@ add_library(
 	"src/window.cpp"
 	"src/transformation.cpp"
 	"src/value_tracker.cpp"
- "src/scene.cpp")
+	"src/scene.cpp"
+	"src/shader.cpp" "src/vertex_array.cpp" "src/texture.cpp" "src/font.cpp" "src/2D/graphics.cpp")
 
 # Version: C++ 20
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 20)

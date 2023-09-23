@@ -29,14 +29,14 @@ public:
 
 	void SwapBuffers();
 
-	void SetWindowPosition(Ivec2 position);
-	void SetWindowSize(Ivec2 size);
-	void SetWindowTitle(std::string title);
+	void SetPosition(Ivec2 position);
+	void SetSize(Ivec2 size);
+	void SetTitle(std::string title);
 	void SetFPS(int fps);
 
-	Ivec2 GetWindowPosition() const;
-	Ivec2 GetWindowSize() const;
-	std::string GetWindowTitle() const;
+	Ivec2 GetPosition() const;
+	Ivec2 GetSize() const;
+	std::string GetTitle() const;
 	int GetFPS() const;
 
 private:
@@ -51,9 +51,8 @@ private:
 	} data;
 
 private:
+	MAYA_NO_COPY_CONSTRUCT(GameWindow);
 	GameWindow() = default;
-	GameWindow(GameWindow const&) = delete;
-	GameWindow& operator=(GameWindow const&) = delete;
 	void CreateWindowEventCallback();
 };
 

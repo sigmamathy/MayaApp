@@ -1,6 +1,7 @@
 #include <Maya/window.hpp>
 #include <Maya/launch.hpp>
 #include <Maya/deviceinfo.hpp>
+#include <Maya/scene.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -31,7 +32,7 @@ GameWindow& GameWindow::CreateInstance(WindowParameters const& param)
 	auto& data = instance->data;
 	data.size = param.fullscreen > 0 ? GetMonitorInfo(param.fullscreen).resolution : param.size;
 	data.title = param.title;
-	data.callback = [](auto&) {};
+	data.callback = [](Event const& e) { for (auto scene : Scene::GetSelectedScenes()) scene->WhenEventHappened(e); };
 	data.fps = param.fps;
 
 	GLFWwindow* window = glfwCreateWindow(data.size[0], data.size[1], data.title.c_str(), monitor, previous_window);
@@ -125,19 +126,19 @@ void GameWindow::SwapBuffers()
 	glfwSwapBuffers((GLFWwindow*)glfw_window);
 }
 
-void GameWindow::SetWindowPosition(Ivec2 position)
+void GameWindow::SetPosition(Ivec2 position)
 {
 	data.position = position;
 	glfwSetWindowPos((GLFWwindow*)glfw_window, position[0], position[1]);
 }
 
-void GameWindow::SetWindowSize(Ivec2 size)
+void GameWindow::SetSize(Ivec2 size)
 {
 	data.size = size;
 	glfwSetWindowSize((GLFWwindow*)glfw_window, size[0], size[1]);
 }
 
-void GameWindow::SetWindowTitle(std::string title)
+void GameWindow::SetTitle(std::string title)
 {
 	data.title = title;
 	glfwSetWindowTitle((GLFWwindow*)glfw_window, title.c_str());
@@ -148,17 +149,17 @@ void GameWindow::SetFPS(int fps)
 	data.fps = fps;
 }
 
-Ivec2 GameWindow::GetWindowPosition() const
+Ivec2 GameWindow::GetPosition() const
 {
 	return data.position;
 }
 
-Ivec2 GameWindow::GetWindowSize() const
+Ivec2 GameWindow::GetSize() const
 {
 	return data.size;
 }
 
-std::string GameWindow::GetWindowTitle() const
+std::string GameWindow::GetTitle() const
 {
 	return data.title;
 }

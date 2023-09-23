@@ -1,98 +1,75 @@
 #include <Maya/launch.hpp>
 #include <Maya/window.hpp>
 #include <Maya/scene.hpp>
+#include <Maya/2D/graphics.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <portaudio.h>
-#include <thread>
-#include <mutex>
 
 namespace Maya {
 
 static bool application_active = true;
-
-static void InitLibraries()
-{
-	glfwInit();
-
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
-
-	Pa_Initialize();
-}
-
-static void TerminateLibraries()
-{
-	Pa_Terminate();
-	glfwTerminate();
-}
 
 void CloseApplication()
 {
 	application_active = false;
 }
 
-}
-
-static std::mutex scene_call_mutex;
-
-static void update_loop()
+struct RAII_ExceptionSafeDelete
 {
-	using namespace Maya;
-
-	float begin = glfwGetTime();
-	GameWindow& window = GameWindow::GetInstance();
-
-	while (application_active)
+	std::function<void()> exitfunc;
+	~RAII_ExceptionSafeDelete()
 	{
-		float elapsed = glfwGetTime() - begin;
-		if (elapsed < 1.0f / window.GetFPS()) continue;
-		begin = glfwGetTime();
-
-		std::unique_lock locker(scene_call_mutex);
-		for (auto scene : Scene::GetSelectedScenes())
-			scene->WhenUpdated(elapsed);
-		locker.unlock();
+		exitfunc();
+		Graphics2D::FreeResources();
+		for (auto& [name, scene] : Scene::GetScenes()) delete scene;
+		if (GameWindow::IsInstanceCreated())
+			delete& GameWindow::GetInstance();
+		Pa_Terminate();
+		glfwTerminate();
 	}
-}
+};
 
-int main(int argc, char** argv)
+
+int internal::MainFunction(std::function<void()> const& entryfunc, std::function<void()> const& exitfunc)
 {
-	using namespace Maya;
-	InitLibraries();
+	glfwInit();
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-	AppEntryPoint();
-	if (!GameWindow::IsInstanceCreated()) {
-		TerminateLibraries();
+	Pa_Initialize();
+
+	RAII_ExceptionSafeDelete _;
+	_.exitfunc = exitfunc;
+	entryfunc();
+
+	if (!GameWindow::IsInstanceCreated())
 		return 0;
-	}
 
-	float begin = glfwGetTime();
 	GameWindow& window = GameWindow::GetInstance();
-
-	std::thread update_loop_thread(update_loop);
+	float min_time_delay = 1.0f / window.GetFPS();
+	float begin = glfwGetTime();
+	float pe_elapsed = 0.0f;
 
 	while (application_active)
 	{
-		float elapsed = glfwGetTime() - begin;
-		if (elapsed < 1.0f / window.GetFPS()) continue;
+		float elapsed = glfwGetTime() - begin - pe_elapsed;
+		if (elapsed < min_time_delay) continue;
 		begin = glfwGetTime();
 
-		std::unique_lock locker(scene_call_mutex);
 		glClear(GL_COLOR_BUFFER_BIT);
 		glClearColor(0, 0, 0, 0);
 		for (auto scene : Scene::GetSelectedScenes())
-			scene->DrawGraphics();
+			scene->WhenUpdated(elapsed);
 		window.SwapBuffers();
-		locker.unlock();
 
+		float pe_begin = glfwGetTime();
 		glfwPollEvents();
+		pe_elapsed = glfwGetTime() - pe_begin;
 	}
 
-	update_loop_thread.join();
-	for (auto& [name, scene] : Scene::GetScenes()) delete scene;
-	delete &window;
-	TerminateLibraries();
 	return 0;
+}
+
 }
