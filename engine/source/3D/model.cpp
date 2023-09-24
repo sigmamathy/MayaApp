@@ -102,7 +102,7 @@ void Model3D::LoadMaterialTextures(Mesh& mesh, void* material, int type, std::st
         aimat->GetTexture(textype, i, &str);
 
         if (!textures.count(str.C_Str()))
-            textures[str.C_Str()] = new Texture(directory + str.C_Str());
+            textures[str.C_Str()] = new Texture(directory + "/" + str.C_Str());
         Texture* texture = textures.at(str.C_Str());
         mesh.texture_ptrs.push_back(texture);
         mesh.texture_uniform_names.push_back(type_uniform + "_" + std::to_string(i));
