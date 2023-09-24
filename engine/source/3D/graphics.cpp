@@ -90,28 +90,24 @@ Graphics3D::Graphics3D()
 {
 	InitResources();
 	glEnable(GL_DEPTH_TEST);
-	glClear(GL_DEPTH_BUFFER_BIT);
+	shader->SetUniform("u_projection", PerspectiveProjection(3.1415926536f / 2, 16.0f / 9, 0.1f, 100.0f));
+	SetCamera(Camera3D());
 }
 
-static float rotate = 0.0f;
+void Graphics3D::SetCamera(Camera3D const& camera)
+{
+	shader->SetUniform("u_view", camera.GetCameraMatrix());
+}
 
 void Graphics3D::Draw(Model3D const& model)
 {
-	rotate += 0.01f;
-
-	shader->SetUniform("u_projection", PerspectiveProjection(3.1415926536f / 2, 16.0f / 9, 0.1f, 100.0f));
-	shader->SetUniform("u_view", LookAt(Fvec3(0.0f, 0.0f, -10.0f), Fvec3(0.0f, 0.0f, 1.0f)));
-	shader->SetUniform("u_model", Rotate(rotate, Fvec3(0.0f, 1.0f, 0.0f)));
-
+	shader->SetUniform("u_model", Fmat4(1.0f));
 	model.Draw(*shader);
 }
 
 void Graphics3D::DrawCube()
 {
-	shader->SetUniform("u_projection", PerspectiveProjection(3.1415926536f / 2, 16.0f / 9, 0.1f, 100.0f));
-	shader->SetUniform("u_view", LookAt(Fvec3(0.0f, 0.0f, -2.0f), Fvec3(0.0f, 0.0f, 1.0f)));
 	shader->SetUniform("u_model", Fmat4(1.0f));
-
 	cube_vao->Draw();
 }
 

@@ -60,7 +60,7 @@ int internal::MainFunction(std::function<void()> const& entryfunc, std::function
 		if (elapsed < min_time_delay) continue;
 		begin = glfwGetTime();
 
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0, 0, 0, 0);
 		for (auto scene : Scene::GetSelectedScenes())
 			scene->WhenUpdated(elapsed);

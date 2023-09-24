@@ -1,6 +1,7 @@
 #pragma once
 
 #include "./model.hpp"
+#include "./camera.hpp"
 
 namespace Maya {
 
@@ -12,6 +13,7 @@ public:
 
 public:
 	Graphics3D();
+	void SetCamera(Camera3D const& camera);
 
 	void Draw(Model3D const& model);
 	void DrawCube();

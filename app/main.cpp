@@ -6,6 +6,7 @@ class MyScene : public Maya::Scene
 {
 public:
 	Maya::Model3D* model;
+	Maya::Camera3D camera;
 
 	MyScene() {
 		model = new Maya::Model3D("engine/resource/obj/backpack.obj");
@@ -18,6 +19,8 @@ public:
 	void WhenUpdated(float elapsed) override
 	{
 		Maya::Graphics3D g;
+		camera.InvokeDefaultControlUpdateCallback(elapsed);
+		g.SetCamera(camera);
 
 		g.Draw(*model);
 		// g.DrawCube();

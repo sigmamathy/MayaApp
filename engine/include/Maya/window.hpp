@@ -39,6 +39,9 @@ public:
 	std::string GetTitle() const;
 	int GetFPS() const;
 
+	bool IsKeyPressed(KeyCode keycode) const;
+	bool IsMouseButtonPressed(MouseButton button) const;
+
 private:
 	static GameWindow* instance;
 	void* glfw_window;

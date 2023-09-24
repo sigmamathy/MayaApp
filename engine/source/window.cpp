@@ -169,4 +169,14 @@ int GameWindow::GetFPS() const
 	return data.fps;
 }
 
+bool GameWindow::IsKeyPressed(KeyCode keycode) const
+{
+	return glfwGetKey((GLFWwindow*)glfw_window, keycode);
+}
+
+bool GameWindow::IsMouseButtonPressed(MouseButton button) const
+{
+	return glfwGetMouseButton((GLFWwindow*)glfw_window, button);
+}
+
 }
