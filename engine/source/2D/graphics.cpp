@@ -10,7 +10,7 @@
 namespace Maya {
 
 static bool is_g2d_initialized = false;
-static Shader* shader = nullptr;
+static Shader* shader;
 
 static VertexArray* square_vao;
 static std::unordered_map<unsigned, VertexArray*> oval_vaos;
@@ -30,15 +30,15 @@ void Graphics2D::InitResources()
 {
 	if (is_g2d_initialized) return;
 
-	shader = new Shader("engine/res/2D/shaders/default.vert.glsl", "engine/res/2D/shaders/default.frag.glsl");
+	shader = new Shader("engine/resource/2D/shaders/default.vert.glsl", "engine/resource/2D/shaders/default.frag.glsl");
 	shader->SetUniform("u_texture", 0);
 	shader->SetUniform("u_glow_texture", 1);
 
 	square_vao = new VertexArray;
 	square_vao->LinkVBO(square_vertices, VertexLayout(2, 2));
-	default_font = new Font("engine/res/2D/fonts/Arial.ttf", 30);
+	default_font = new Font("engine/resource/2D/fonts/Arial.ttf", 30);
 
-#define MAYA_GLOW(_name) glows[_name] = new Texture("engine/res/2D/glows/" _name ".jpg", 3)
+#define MAYA_GLOW(_name) glows[_name] = new Texture("engine/resource/2D/glows/" _name ".jpg", 3)
 	MAYA_GLOW("horizontal");
 	MAYA_GLOW("vertical");
 	MAYA_GLOW("diagonal");

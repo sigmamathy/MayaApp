@@ -2,6 +2,7 @@
 #include <Maya/window.hpp>
 #include <Maya/scene.hpp>
 #include <Maya/2D/graphics.hpp>
+#include <Maya/3D/graphics.hpp>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <portaudio.h>
@@ -22,6 +23,7 @@ struct RAII_ExceptionSafeDelete
 	{
 		exitfunc();
 		Graphics2D::FreeResources();
+		Graphics3D::FreeResources();
 		for (auto& [name, scene] : Scene::GetScenes()) delete scene;
 		if (GameWindow::IsInstanceCreated())
 			delete& GameWindow::GetInstance();

@@ -1,16 +1,26 @@
 #include <Maya.hpp>
 #include <Maya/2D/graphics.hpp>
+#include <Maya/3D/graphics.hpp>
 
 class MyScene : public Maya::Scene
 {
 public:
-	float y = 0.0f;
+	Maya::Model3D* model;
+
+	MyScene() {
+		model = new Maya::Model3D("engine/resource/obj/backpack.obj");
+	}
+
+	~MyScene() {
+		delete model;
+	}
 
 	void WhenUpdated(float elapsed) override
 	{
-		y += elapsed * 50.0f;
-		Maya::Graphics2D g2d;
-		g2d.DrawRect(0, y, 100, 100);
+		Maya::Graphics3D g;
+
+		g.Draw(*model);
+		// g.DrawCube();
 	}
 };
 

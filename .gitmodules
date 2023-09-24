@@ -10,3 +10,6 @@
 [submodule "engine/thirdparty/sndfile"]
 	path = engine/thirdparty/sndfile
 	url = https://github.com/libsndfile/libsndfile.git
+[submodule "engine/thirdparty/assimp"]
+	path = engine/thirdparty/assimp
+	url = https://github.com/assimp/assimp.git

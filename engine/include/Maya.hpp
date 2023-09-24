@@ -14,3 +14,4 @@
 #include "./Maya/shader.hpp"
 #include "./Maya/texture.hpp"
 #include "./Maya/font.hpp"
+#include "./Maya/audio_stream.hpp"
