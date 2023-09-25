@@ -19,7 +19,9 @@ add_library(
 	"source/audio_stream.cpp"
 	"source/2D/graphics.cpp"
 	"source/3D/model.cpp"
- "source/3D/graphics.cpp" "source/3D/camera.cpp")
+	"source/3D/graphics.cpp"
+	"source/3D/camera.cpp"
+)
 
 if (MSVC)
 add_compile_options(/wd4819)

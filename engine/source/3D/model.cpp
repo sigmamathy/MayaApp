@@ -10,10 +10,20 @@
 
 namespace Maya {
 
+void Mesh3D::Draw(Shader& shader) const
+{
+    for (int i = 0; i < texture_ptrs.size(); i++) {
+        texture_ptrs[i]->Bind(i);
+        shader.SetUniform(texture_uniform_names[i], i);
+    }
+    vao->Draw();
+}
+
 Model3D::Model3D(std::string const& path)
 {
-	Assimp::Importer importer;
-	const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
 #if MAYA_DEBUG
     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
@@ -21,14 +31,19 @@ Model3D::Model3D(std::string const& path)
         return;
     }
 #endif
-    directory = std::filesystem::path(path).parent_path().string();
+    directory = std::filesystem::path(path).parent_path().string(); 
     ProcessNode(scene->mRootNode, scene);
 }
 
 Model3D::~Model3D()
 {
-    for (Mesh& mesh : meshes) delete mesh.vao;
+    for (Mesh3D& mesh : meshes) delete mesh.vao;
     for (auto texture : textures) delete texture.second;
+}
+
+std::vector<Mesh3D> const& Model3D::GetMeshes() const
+{
+    return meshes;
 }
 
 void Model3D::ProcessNode(void* node, void const* scene)
@@ -53,7 +68,7 @@ void Model3D::ProcessMesh(void* mesh, void const* scene)
 
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
-    Mesh& result = meshes.emplace_back();
+    Mesh3D& m3d = meshes.emplace_back();
 
     vertices.reserve(aimesh->mNumVertices * 8);
     vertices.reserve(aimesh->mNumFaces * 3);
@@ -79,19 +94,19 @@ void Model3D::ProcessMesh(void* mesh, void const* scene)
             indices.push_back(face.mIndices[j]);
     }
 
-    result.vao = new VertexArray;
-    result.vao->LinkVBO(vertices, VertexLayout(3, 3, 2));
-    result.vao->LinkIBO(indices);
+    m3d.vao = new VertexArray;
+    m3d.vao->LinkVBO(vertices, VertexLayout(3, 3, 2));
+    m3d.vao->LinkIBO(indices);
 
     if (aimesh->mMaterialIndex >= 0)
     {
         aiMaterial* mat = aiscene->mMaterials[aimesh->mMaterialIndex];
-        LoadMaterialTextures(result, mat, aiTextureType_DIFFUSE, "u_texture_diffuse");
-        LoadMaterialTextures(result, mat, aiTextureType_SPECULAR, "u_texture_specular");
+        LoadMaterialTextures(m3d, mat, aiTextureType_DIFFUSE, "u_texture_diffuse");
+        LoadMaterialTextures(m3d, mat, aiTextureType_SPECULAR, "u_texture_specular");
     }
 }
 
-void Model3D::LoadMaterialTextures(Mesh& mesh, void* material, int type, std::string const& type_uniform)
+void Model3D::LoadMaterialTextures(Mesh3D& mesh, void* material, int type, std::string const& type_uniform)
 {
     aiMaterial* aimat = (aiMaterial*) material;
     aiTextureType textype = (aiTextureType) type;
@@ -106,17 +121,6 @@ void Model3D::LoadMaterialTextures(Mesh& mesh, void* material, int type, std::st
         Texture* texture = textures.at(str.C_Str());
         mesh.texture_ptrs.push_back(texture);
         mesh.texture_uniform_names.push_back(type_uniform + "[" + std::to_string(i) + "]");
-    }
-}
-
-void Model3D::Draw(Shader& shader) const
-{
-    for (Mesh const& mesh : meshes) {
-        for (int i = 0; i < mesh.texture_ptrs.size(); i++) {
-            mesh.texture_ptrs[i]->Bind(i);
-            shader.SetUniform(mesh.texture_uniform_names[i], i);
-        }
-        mesh.vao->Draw();
     }
 }
 

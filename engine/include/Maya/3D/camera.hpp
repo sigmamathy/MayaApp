@@ -9,7 +9,7 @@ class Camera3D
 {
 public:
 	Camera3D();
-	Fmat4 GetCameraMatrix() const;
+	Fmat4 GetViewMatrix() const;
 	void InvokeDefaultControlUpdateCallback(float elapsed);
 
 	void SetPosition(Fvec3 position);

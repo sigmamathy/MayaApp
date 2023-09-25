@@ -32,7 +32,7 @@ GameWindow& GameWindow::CreateInstance(WindowParameters const& param)
 	auto& data = instance->data;
 	data.size = param.fullscreen > 0 ? GetMonitorInfo(param.fullscreen).resolution : param.size;
 	data.title = param.title;
-	data.callback = [](Event const& e) { for (auto scene : Scene::GetSelectedScenes()) scene->WhenEventHappened(e); };
+	data.callback = [](Event const& e) { for (auto* scene : GetActiveScenes()) scene->WhenEventHappened(e); };
 	data.fps = param.fps;
 
 	GLFWwindow* window = glfwCreateWindow(data.size[0], data.size[1], data.title.c_str(), monitor, previous_window);

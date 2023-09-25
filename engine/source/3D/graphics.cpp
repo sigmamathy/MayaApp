@@ -91,18 +91,19 @@ Graphics3D::Graphics3D()
 	InitResources();
 	glEnable(GL_DEPTH_TEST);
 	shader->SetUniform("u_projection", PerspectiveProjection(3.1415926536f / 2, 16.0f / 9, 0.1f, 100.0f));
-	SetCamera(Camera3D());
+	SetViewMatrix(Camera3D().GetViewMatrix());
 }
 
-void Graphics3D::SetCamera(Camera3D const& camera)
+void Graphics3D::SetViewMatrix(Fmat4 const& view)
 {
-	shader->SetUniform("u_view", camera.GetCameraMatrix());
+	shader->SetUniform("u_view", view);
 }
 
 void Graphics3D::Draw(Model3D const& model)
 {
 	shader->SetUniform("u_model", Fmat4(1.0f));
-	model.Draw(*shader);
+	for (auto& mesh: model.GetMeshes())
+		mesh.Draw(*shader);
 }
 
 void Graphics3D::DrawCube()

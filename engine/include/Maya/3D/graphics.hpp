@@ -13,7 +13,7 @@ public:
 
 public:
 	Graphics3D();
-	void SetCamera(Camera3D const& camera);
+	void SetViewMatrix(Fmat4 const& view);
 
 	void Draw(Model3D const& model);
 	void DrawCube();

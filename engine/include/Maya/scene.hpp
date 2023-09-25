@@ -8,13 +8,6 @@ namespace Maya {
 class Scene
 {
 public:
-	static std::unordered_map<std::string, Scene*>& GetScenes();
-	static std::vector<Scene*> const& GetSelectedScenes();
-	static void BeginScene(std::string const& name);
-	static void EndScene(std::string const& name);
-	static bool IsSceneSelected(std::string const& name);
-
-public:
 	virtual ~Scene() = default;
 	virtual void WhenBegin() {}
 	virtual void WhenEnd() {}
@@ -25,5 +18,9 @@ private:
 	static std::unordered_map<std::string, Scene*> scenes;
 	static std::vector<Scene*> selected_scenes;
 };
+
+std::vector<Scene*> const& GetActiveScenes();
+void ActivateScene(Scene* scene);
+void DeactivateScene(Scene* scene);
 
 }

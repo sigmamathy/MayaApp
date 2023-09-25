@@ -24,7 +24,6 @@ struct RAII_ExceptionSafeDelete
 		exitfunc();
 		Graphics2D::FreeResources();
 		Graphics3D::FreeResources();
-		for (auto& [name, scene] : Scene::GetScenes()) delete scene;
 		if (GameWindow::IsInstanceCreated())
 			delete& GameWindow::GetInstance();
 		Pa_Terminate();
@@ -62,7 +61,7 @@ int internal::MainFunction(std::function<void()> const& entryfunc, std::function
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0, 0, 0, 0);
-		for (auto scene : Scene::GetSelectedScenes())
+		for (auto* scene : GetActiveScenes())
 			scene->WhenUpdated(elapsed);
 		window.SwapBuffers();
 

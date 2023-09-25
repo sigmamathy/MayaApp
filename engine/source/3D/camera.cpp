@@ -9,7 +9,7 @@ Camera3D::Camera3D()
 {
 }
 
-Fmat4 Camera3D::GetCameraMatrix() const
+Fmat4 Camera3D::GetViewMatrix() const
 {
 	Fvec4 orientation(0.0f, 0.0f, 1.0f, 1.0f);
 	orientation = Rotate(vertical_angle, Fvec3(-1.0f, 0.0f, 0.0f)) * orientation;
